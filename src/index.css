@@ -5,7 +5,7 @@ body {
 .header {
  background-image: url(./assets/imgs/header.png);
  background-size:cover;
- width: 1550px;
+ width: 1536px;
  height: 750px;
 }
 .navbar {
