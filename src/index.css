@@ -91,7 +91,9 @@ body {
 }
 
 .fondo-contenedor {
-  background-color: #000;
+  background-image: url(./assets/imgs/header.png);
+  background-size:cover;
+  width: 1536px;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -123,9 +125,9 @@ body {
 .enviar-registro.clicked {
   background-color: #000 !important;
 }
-
-
-
+input[type="checkbox"] {
+  border-color: #000;
+}
 footer {
   text-align: center;
   font-size: 20px;

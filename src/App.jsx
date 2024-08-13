@@ -3,22 +3,24 @@ import napo from './assets/imgs/napo.jpeg'
 import espanola from './assets/imgs/espanola.jpeg'
 import peperoni from './assets/imgs/peperoni.jpeg'
 import CardPizza from './Components/Cards'
+import Formulario from './Components/RegisterPage';
 */
 
 import Nav from './Components/Nav';
 import Footer from './Components/Footer';
 import './index.css';
-import Formulario from './Components/RegisterPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Login from './Components/Login'
 
 
 function App() {
   return (
     <>
-    <Nav></Nav>
-    <Formulario />
+    <Nav />
+    <Login />
     {/*
-    <Home></Home>
+    <Formulario />
+    <Home />
     <div className="contenedor-flex">
         <CardPizza
           img={napo}
@@ -39,7 +41,7 @@ function App() {
           price={6950}
         />
       </div> */}
-      <Footer></Footer>
+      <Footer />
     </>
   );
 }

@@ -5,17 +5,16 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 
-function Formulario() {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState({ email: false, password: false, confirmPassword: false, terms: false });
+  const [error, setError] = useState({ email: false, password: false, terms: false });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
   const validarDatos = (e) => {
     e.preventDefault();
-    const newError = { email: false, password: false, confirmPassword: false, terms: false };
+    const newError = { email: false, password: false, terms: false };
 
     if (email === "") {
       newError.email = true;
@@ -23,19 +22,15 @@ function Formulario() {
     if (password === "" || password.length < 6) {
       newError.password = true;
     }
-    if (password !== confirmPassword) {
-      newError.confirmPassword = true;
-    }
     if (!termsAccepted) {
       newError.terms = true;
     }
-    if (newError.email || newError.password || newError.confirmPassword || newError.terms) {
+    if (newError.email || newError.password || newError.terms) {
       setError(newError);
       return;
     }
     setError({ email: false, password: false, confirmPassword: false, terms: false });
     setPassword('');
-    setConfirmPassword('');
     setEmail('');
     setTermsAccepted(false);
     setShowAlert(true);
@@ -45,19 +40,18 @@ function Formulario() {
     <div className="fondo-contenedor">
       <div className="contenedor-form">
         <Form noValidate onSubmit={validarDatos}>
-          <h1>Registro</h1>
+          <h1>Login</h1>
 
           {error.email && <p className="text-danger">Por favor, ingrese un email válido.</p>}
           {error.password && <p className="text-danger">La contraseña debe tener al menos 6 caracteres.</p>}
-          {error.confirmPassword && <p className="text-danger">Las contraseñas no coinciden.</p>}
           {error.terms && <p className="text-danger">Debe aceptar los términos y condiciones.</p>}
 
           {showAlert && <Alert variant="success" onClose={() => setShowAlert(false)} dismissible>
-            Datos enviados correctamente.
+            Autentificación correcta.
           </Alert>}
 
           <Row className="mb-3">
-            <Form.Group as={Col} md="12" controlId="validacionEmail">
+            <Form.Group as={Col} md="6" controlId="validacionEmail">
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="email"
@@ -69,7 +63,6 @@ function Formulario() {
               />
             </Form.Group>
           </Row>
-
           <Row className="mb-3">
             <Form.Group as={Col} md="6" controlId="validacionContrasena">
               <Form.Label>Contraseña</Form.Label>
@@ -80,18 +73,6 @@ function Formulario() {
                 value={password}
                 isInvalid={error.password}
                 onChange={(e) => setPassword(e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group as={Col} md="6" controlId="validacionConfirmacionContrasena">
-              <Form.Label>Confirmar contraseña</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Confirmar contraseña"
-                required
-                value={confirmPassword}
-                isInvalid={error.confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </Form.Group>
           </Row>
@@ -114,5 +95,4 @@ function Formulario() {
   );
 }
 
-export default Formulario;
-
+export default Login;
