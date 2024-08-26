@@ -1,7 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
 const Navbar = () => {
   const token = false;
   const total = 25000;
@@ -39,4 +38,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

@@ -1,8 +1,15 @@
+import Cards from "./Cards";
 
-const Header = () => {
-    return (
-    <header className="header"></header>
-    )
-}
+const Home = () => {
 
-export default Header;
+  return (
+    <div>
+      <header className="header"></header>
+      <main>
+        <Cards/>
+      </main>
+    </div>
+  );
+};
+
+export default Home;
