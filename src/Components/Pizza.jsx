@@ -12,6 +12,7 @@ const Pizzas = () => {
       setPizza(data);
     } catch (error) {
       console.error("Error al obtener la pizza:", error);
+      setPizza(null);
     }
   };
 
@@ -19,9 +20,13 @@ const Pizzas = () => {
     infoApi();
   }, []);
 
+  if (!pizza) {
+    return <p>Cargando...</p>;
+  }
+
   return (
     <div key={pizza.id} className="pizza">
-        <img src={pizza.img} alt={pizza.name} />
+      <img src={pizza.img} alt={pizza.name} />
       <div className="pizza-texto">
         <h2>{pizza.name}</h2>
         <h4>Descripción:</h4>
@@ -36,3 +41,4 @@ const Pizzas = () => {
 };
 
 export default Pizzas;
+
