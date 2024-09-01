@@ -150,6 +150,24 @@ input[type="checkbox"] {
   margin: 10px 350px;
   background-color: #000 !important;
 }
+.pizza {
+  margin: 60px;
+  width: 300px;
+  border: 1px solid black;
+  box-shadow: 5px 5px 20px 20px #686868;
+}
+.pizza img {
+  width: 300px;
+}
+.pizza-texto {
+  padding: 20px;
+}
+.pizza-btn {
+  background-color: #000 !important;
+  border-radius: 5%;
+  padding: 10px;
+  margin-left: 160px;
+}
 footer {
   text-align: center;
   font-size: 20px;
