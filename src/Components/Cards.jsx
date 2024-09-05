@@ -1,50 +1,53 @@
+import { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import { useState, useEffect } from "react";
 
-
-const CardPizza = () => {
-  const [info, setInfo] = useState([]);
+const PizzaList = ({ agregarAlCarrito }) => {
+  const [pizzas, setPizzas] = useState([]);
 
   const url = "http://localhost:5000/api/pizzas";
 
-  const consultarApi = async () => {
-    const response = await fetch(url);
-    const data = await response.json();
-    setInfo(data);
+  const fetchPizzas = async () => {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setPizzas(data);
+    } catch (error) {
+      console.error("Error al obtener las pizzas:", error);
+      setPizzas([]);
+    }
   };
 
   useEffect(() => {
-    consultarApi();
+    fetchPizzas();
   }, []);
 
+  if (pizzas.length === 0) {
+    return <p>Cargando...</p>;
+  }
 
   return (
     <div className="cards-container">
-      {info.map((data) => (
-        <Card key={data.id} className="card-pizza" style={{ width: '20rem', margin: '10px' }}>
-          <Card.Img variant="top" src={data.img} />
+      {pizzas.map((pizzaItem) => (
+        <Card key={pizzaItem.id} className="card-pizza" style={{ width: '20rem', margin: '10px' }}>
+          <Card.Img variant="top" src={pizzaItem.img} />
           <Card.Body>
             <div className="card-content">
-              <Card.Title>{data.name}</Card.Title>
+              <Card.Title>{pizzaItem.name}</Card.Title>
               <hr />
-              <Card.Text>
-              <h4>Descripción:</h4>
-              <p>{data.desc}</p>
-              </Card.Text>
-              <hr />
-              <Card.Text className="ingredientes">
+              <Card.Subtitle className="ingredientes">
                 <h5>Ingredientes:</h5>
-                <p>🍕 {data.ingredients.join(', ')}</p>
-              </Card.Text>
+                <p>🍕 {pizzaItem.ingredients.join(', ')}</p>
+              </Card.Subtitle>
             </div>
             <div className="card-footer">
               <Card.Text className="precio">
-                Precio: ${data.price}
+                Precio: ${pizzaItem.price}
               </Card.Text>
               <div className="botones">
                 <Button className="btn-card" aria-label="ojos">Ver más 👀</Button>
-                <Button className="btn-card" aria-label="carrito">
+                <Button className="btn-card" aria-label="carrito" onClick={() => agregarAlCarrito(pizzaItem)}>
                   Añadir 🛒
                 </Button>
               </div>
@@ -56,5 +59,8 @@ const CardPizza = () => {
   );
 };
 
+PizzaList.propTypes = {
+  agregarAlCarrito: PropTypes.func.isRequired,
+};
 
-export default CardPizza;
+export default PizzaList;
