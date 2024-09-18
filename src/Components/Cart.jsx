@@ -1,7 +1,11 @@
+import { useContext } from 'react';
 import Button from 'react-bootstrap/Button';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { ApiContext } from '../Context/ApiContext';
 
-const Carrito = ({ cart, aumentarCantidad, disminuirCantidad, eliminarItem }) => {
+const Carrito = () => {
+  const { cart, moreQuantity, lessQuantity, deleteItem } = useContext(ApiContext);
+
   return (
     <div className="listaCarrito">
       {cart.length === 0 ? (
@@ -15,27 +19,22 @@ const Carrito = ({ cart, aumentarCantidad, disminuirCantidad, eliminarItem }) =>
                 <p>{item.name}</p>
                 <p>$ {item.price}</p>
                 <div className="d-flex">
-                  <Button className="botonCarrito" onClick={() => disminuirCantidad(item.id)}>-</Button>
+                  <Button className="botonCarrito" onClick={() => lessQuantity(item.id)}>-</Button>
                   <span className="mx-2">{item.quantity}</span>
-                  <Button className="botonCarrito" onClick={() => aumentarCantidad(item.id)}>+</Button>
-                  <Button onClick={() => eliminarItem(item.id)} className="ms-2 botonCarrito">🗑️</Button>
+                  <Button className="botonCarrito" onClick={() => moreQuantity(item.id)}>+</Button>
+                  <Button onClick={() => deleteItem(item.id)} className="ms-2 botonCarrito">🗑️</Button>
                 </div>
-              <hr />
+                <hr />
               </div>
             </li>
           ))}
         </ul>
       )}
-      <Button className="botonPago">Pagar</Button>
+      <Link to="/Cart">
+        <Button className="botonPago">Pagar</Button>
+      </Link>
     </div>
   );
-};
-
-Carrito.propTypes = {
-  cart: PropTypes.array.isRequired,
-  aumentarCantidad: PropTypes.func.isRequired,
-  disminuirCantidad: PropTypes.func.isRequired,
-  eliminarItem: PropTypes.func.isRequired,
 };
 
 export default Carrito;

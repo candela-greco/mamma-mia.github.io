@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
+import { Link } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -87,8 +88,9 @@ function Login() {
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />
           </Form.Group>
-
-          <Button className="enviar-registro" type="submit">Enviar</Button>
+          <Link to="/Profile">
+            <Button className="autenticacion" type="submit">Enviar</Button>
+          </Link>
         </Form>
       </div>
     </div>

@@ -93,6 +93,9 @@ function Formulario() {
                 isInvalid={error.confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
+              <Form.Text id="passwordHelpBlock" muted>
+                La contraseña debe tener entre 6-20 caracteres.
+              </Form.Text>
             </Form.Group>
           </Row>
 
@@ -107,7 +110,7 @@ function Formulario() {
             />
           </Form.Group>
 
-          <Button className="enviar-registro" type="submit">Enviar</Button>
+          <Button className="autenticacion" type="submit">Enviar</Button>
         </Form>
       </div>
     </div>

@@ -1,10 +1,21 @@
+import { useContext } from 'react';
 import Button from 'react-bootstrap/Button';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import { ApiContext } from '../Context/ApiContext';
 
-const Carrito = ({ cart, aumentarCantidad, disminuirCantidad, eliminarItem }) => {
+const CartPage = () => {
+  const { cart, moreQuantity, lessQuantity, deleteItem, total } = useContext(ApiContext);
+
+  const formatTotal = (amount) => {
+    return (amount || 0).toLocaleString();
+  };
+
   return (
-    <div className="listaCarrito">
-      <h1>Carrito: </h1>
+    <div className="paginaCarrito">
+      <Link to="/">
+      <Button className="boton-volver"> ← Volver </Button>
+      </Link>
+      <h1>Carrito:</h1>
       <ul>
         {cart.length === 0 ? (
           <p>El carrito está vacío.</p>
@@ -16,25 +27,10 @@ const Carrito = ({ cart, aumentarCantidad, disminuirCantidad, eliminarItem }) =>
                 <p>{item.name}</p>
                 <p>$ {item.price}</p>
                 <div className="d-flex">
-                  <Button
-                    className="botonCarrito"
-                    onClick={() => disminuirCantidad(item.id)}
-                  >
-                    -
-                  </Button>
+                  <Button className="botonCarrito" onClick={() => lessQuantity(item.id)}>-</Button>
                   <span className="mx-2">{item.quantity}</span>
-                  <Button
-                    className="botonCarrito"
-                    onClick={() => aumentarCantidad(item.id)}
-                  >
-                    +
-                  </Button>
-                  <Button
-                    className="ms-2 botonCarrito"
-                    onClick={() => eliminarItem(item.id)}
-                  >
-                    🗑️
-                  </Button>
+                  <Button className="botonCarrito" onClick={() => moreQuantity(item.id)}>+</Button>
+                  <Button className="ms-2 botonCarrito" onClick={() => deleteItem(item.id)}>🗑️</Button>
                 </div>
                 <hr />
               </div>
@@ -42,16 +38,12 @@ const Carrito = ({ cart, aumentarCantidad, disminuirCantidad, eliminarItem }) =>
           ))
         )}
       </ul>
-       <Button className="botonPago">Pagar</Button>
+      <div>
+      🛒 Total: ${formatTotal(total)}
+      <Button className="botonPago">Pagar</Button>
+      </div>
     </div>
   );
 };
 
-Carrito.propTypes = {
-  cart: PropTypes.array.isRequired,
-  aumentarCantidad: PropTypes.func.isRequired,
-  disminuirCantidad: PropTypes.func.isRequired,
-  eliminarItem: PropTypes.func.isRequired,
-};
-
-export default Carrito;
+export default CartPage;

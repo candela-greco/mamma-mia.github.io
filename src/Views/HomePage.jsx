@@ -1,19 +1,18 @@
+import { useContext } from 'react';
 import Cards from "../Components/Cards";
-import PropTypes from 'prop-types';
+import { ApiContext } from '../Context/ApiContext';
 
-const HomePage = ({agregarAlCarrito}) => {
+const HomePage = () => {
+  const { addToCart } = useContext(ApiContext);
+
   return (
     <div>
       <header className="header"></header>
       <main>
-        <Cards agregarAlCarrito={agregarAlCarrito} />
+        <Cards addToCart={addToCart} />
       </main>
     </div>
   );
-};
-
-HomePage.propTypes = {
-    agregarAlCarrito: PropTypes.func.isRequired,
 };
 
 export default HomePage;

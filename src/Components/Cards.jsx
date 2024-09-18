@@ -1,27 +1,12 @@
-import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { ApiContext } from "../Context/ApiContext";
 import PropTypes from 'prop-types';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import { Link } from "react-router-dom";
 
-const PizzaList = ({ agregarAlCarrito }) => {
-  const [pizzas, setPizzas] = useState([]);
-
-  const url = "http://localhost:5000/api/pizzas";
-
-  const fetchPizzas = async () => {
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      setPizzas(data);
-    } catch (error) {
-      console.error("Error al obtener las pizzas:", error);
-      setPizzas([]);
-    }
-  };
-
-  useEffect(() => {
-    fetchPizzas();
-  }, []);
+const PizzaList = ({ addToCart }) => {
+  const { pizzas } = useContext(ApiContext);
 
   if (pizzas.length === 0) {
     return <p>Cargando...</p>;
@@ -46,8 +31,10 @@ const PizzaList = ({ agregarAlCarrito }) => {
                 Precio: ${pizzaItem.price}
               </Card.Text>
               <div className="botones">
-                <Button className="btn-card" aria-label="ojos">Ver más 👀</Button>
-                <Button className="btn-card" aria-label="carrito" onClick={() => agregarAlCarrito(pizzaItem)}>
+                <Link to="./PizzaView">
+                  <Button className="btn-card" aria-label="ojos">Ver más 👀</Button>
+                </Link>
+                <Button className="btn-card" aria-label="carrito" onClick={() => addToCart(pizzaItem)}>
                   Añadir 🛒
                 </Button>
               </div>
@@ -60,7 +47,7 @@ const PizzaList = ({ agregarAlCarrito }) => {
 };
 
 PizzaList.propTypes = {
-  agregarAlCarrito: PropTypes.func.isRequired,
+  addToCart: PropTypes.func.isRequired,
 };
 
 export default PizzaList;
