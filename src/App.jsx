@@ -1,7 +1,7 @@
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Footer from "./Components/Footer";
 import Nav from "./Components/Nav";
 import HomePage from "./Views/HomePage";
@@ -12,12 +12,17 @@ import PizzaView from "./Views/PizzaView";
 import Error from "./Views/Error";
 import ProfilePage from "./Views/ProfilePage";
 import { ApiProvider } from "./Context/ApiContext";
+import { UserContext } from "./Context/UserContext";
 
 function App() {
   const [cart, setCart] = useState([]);
+  const { token } = useContext(UserContext);
 
+  console.log("Token en App:", token);
+  
   const addToCart = (pizza) => {
     setCart((prevCart) => {
+      console.log('Añadiendo al carrito:', pizza);
       const existingItem = prevCart.find(item => item.id === pizza.id);
       if (existingItem) {
         return prevCart.map(item =>
@@ -28,6 +33,10 @@ function App() {
       }
     });
   };
+
+  useEffect(() => {
+    console.log("Carrito actualizado:", cart);
+  }, [cart]);
 
   const updateQuantity = (pizzaId, quantity) => {
     setCart((prevCart) =>
@@ -60,36 +69,36 @@ function App() {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <ApiProvider>
-      <Router basename="//mamma-mia.github.io.git">
-        <div className="App">
-          <Nav
-            cart={cart}
-            total={total}
-            updateQuantity={updateQuantity}
-            moreQuantity={moreQuantity}
-            lessQuantity={lessQuantity}
-            deleteItem={deleteItem}
-          />
-          <Routes>
-            <Route path="/" element={<HomePage addToCart={addToCart} />} />
-            <Route path="/Cart" element={<CartPage
+      <ApiProvider>
+        <BrowserRouter basename="/mamma-mia.github.io.git">
+          <div className="App">
+            <Nav
               cart={cart}
+              total={total}
               updateQuantity={updateQuantity}
               moreQuantity={moreQuantity}
               lessQuantity={lessQuantity}
               deleteItem={deleteItem}
-            />} />
-            <Route path="/PizzaView" element={<PizzaView addToCart={addToCart} />} />
-            <Route path="/*" element={<Error />} />
-            <Route path="/Login" element={<LoginPage />} />
-            <Route path="/Register" element={<RegisterPage />} />
-            <Route path="/Profile" element={<ProfilePage />} />
-          </Routes>
-          <Footer />
-        </div>
-      </Router>
-    </ApiProvider>
+              />
+            <Routes>
+              <Route path="/" element={<HomePage addToCart={addToCart} />} />
+              <Route path="/Cart" element={<CartPage
+                cart={cart}
+                updateQuantity={updateQuantity}
+                moreQuantity={moreQuantity}
+                lessQuantity={lessQuantity}
+                deleteItem={deleteItem}
+                />} />
+              <Route path="/pizza/:id" element={<PizzaView addToCart={addToCart} />} />
+              <Route path="/*" element={<Error />} />
+              <Route path="/login" element={token ? <Navigate to="/" /> : <LoginPage />} />
+              <Route path="/register" element={token ? <Navigate to="/" /> : <RegisterPage />} />
+              <Route path="/profile" element={token ? <ProfilePage /> : <Navigate to="/login" />} />
+              </Routes>
+            <Footer />
+          </div>
+        </BrowserRouter>
+      </ApiProvider>
   );
 }
 

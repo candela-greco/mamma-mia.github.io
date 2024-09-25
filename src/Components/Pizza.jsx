@@ -1,14 +1,37 @@
-import { useContext } from 'react';
-import { PizzaApi } from '../Context/PizzaApi';
-import Button from 'react-bootstrap/Button';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
-import PropTypes from 'prop-types';
 
-const Pizza = ({ addToCart }) => {
-  const { pizza } = useContext(PizzaApi);
+const Pizza = () => {
+  const { id } = useParams(); 
+  const [pizza, setPizza] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchPizzaData = async (pizzaId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/pizzas/${pizzaId}`);
+      const data = await response.json();
+      setPizza(data);
+    } catch (error) {
+      console.error('Error al obtener la pizza:', error);
+      setPizza(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchPizzaData(id);
+    }
+  }, [id]);
+
+  if (loading) {
+    return <p>Cargando pizza...</p>;
+  }
 
   if (!pizza) {
-    return <p>Cargando...</p>;
+    return <p>No se pudo cargar la pizza.</p>;
   }
 
   return (
@@ -17,17 +40,14 @@ const Pizza = ({ addToCart }) => {
         <Card.Img variant="top" src={pizza.img} />
         <Card.Body>
           <Card.Title>{pizza.name}</Card.Title>
-          <p>Ingredientes: {pizza.ingredients.join(', ')}</p>
+          <p>Descripción: {pizza.desc}</p>
+          <p>🍕 Ingredientes: {pizza.ingredients.join(', ')}</p>
           <p>Precio: ${pizza.price}</p>
-          <Button className="botonCarrito" onClick={() => addToCart(pizza)}>Añadir al carrito</Button>
         </Card.Body>
       </Card>
     </div>
   );
 };
 
-Pizza.propTypes = {
-  addToCart: PropTypes.func.isRequired,
-};
-
 export default Pizza;
+

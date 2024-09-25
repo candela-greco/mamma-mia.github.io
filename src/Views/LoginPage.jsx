@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../Context/UserContext';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -12,6 +13,9 @@ function Login() {
   const [error, setError] = useState({ email: false, password: false, terms: false });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+
+  const { login } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const validarDatos = (e) => {
     e.preventDefault();
@@ -30,11 +34,16 @@ function Login() {
       setError(newError);
       return;
     }
+
+    login();
+
     setError({ email: false, password: false, confirmPassword: false, terms: false });
     setPassword('');
     setEmail('');
     setTermsAccepted(false);
     setShowAlert(true);
+
+    navigate("/profile");
   };
 
   return (
@@ -48,7 +57,7 @@ function Login() {
           {error.terms && <p className="text-danger">Debe aceptar los términos y condiciones.</p>}
 
           {showAlert && <Alert variant="success" onClose={() => setShowAlert(false)} dismissible>
-            Autentificación correcta.
+            Autenticación correcta.
           </Alert>}
 
           <Row className="mb-3">
@@ -88,9 +97,10 @@ function Login() {
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />
           </Form.Group>
-          <Link to="/Profile">
-            <Button className="autenticacion" type="submit">Enviar</Button>
-          </Link>
+
+          <Button className="autenticacion" type="submit">
+            Enviar
+          </Button>
         </Form>
       </div>
     </div>
@@ -98,3 +108,4 @@ function Login() {
 }
 
 export default Login;
+

@@ -1,15 +1,18 @@
-import { useState, useContext } from "react";
+import { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Cart from "./Cart";
 import { ApiContext } from "../Context/ApiContext";
+import { UserContext } from "../Context/UserContext";
 
 const Nav = () => {
   const { total, cart, moreQuantity, lessQuantity, deleteItem } = useContext(ApiContext);
-  const token = false;
+  const { token, logout } = useContext(UserContext);
   const [showCart, setShowCart] = useState(false);
+  const setActiveClass = ({ isActive }) => (isActive ? "active" : undefined);
+
+  console.log("Valor del token:", token);
 
   const formatTotal = (amount) => {
     return (amount || 0).toLocaleString();
@@ -21,24 +24,23 @@ const Nav = () => {
         <div className="d-flex flex-grow-1">
           <h3>¡Mamma Mía!</h3>
           <div className="d-flex flex-grow-1">
-            <Link className="link" to="/">
-              <Button className="nav-item mx-2 btn-custom">🍕Home</Button>
-            </Link>
+              <NavLink className={`${setActiveClass} links-nav`} to="/">🍕Home</NavLink>
             {token ? (
               <>
-                <Button className="nav-item mx-2 btn-custom">🔓 Profile</Button>
-                <Button className="nav-item mx-2 btn-custom">🔒 Logout</Button>
+                <NavLink className={`${setActiveClass} links-nav`} to="/profile">🔓 Profile</NavLink>
+                  <NavLink className={`${setActiveClass} links-nav`} to="/"    onClick={() => {
+                    console.log("Logout presionado");
+                    logout();
+                  }}>
+                  🔒 Logout
+                </NavLink>
               </>
             ) : (
               <>
-                <Link className="link" to="/Login">
-                  <Button className="nav-item mx-2 btn-custom">🔐 Login</Button>
-                </Link>
-                <Link className="link" to="/Register">
-                  <Button className="nav-item mx-2 btn-custom">
+                  <NavLink className={`${setActiveClass} links-nav`} to="/Login">🔐 Login</NavLink>
+                  <NavLink className={`${setActiveClass} links-nav`} to="/Register">
                     🔐 Register
-                  </Button>
-                </Link>
+                  </NavLink>
               </>
             )}
           </div>
@@ -64,5 +66,7 @@ const Nav = () => {
 };
 
 export default Nav;
+
+
 
 

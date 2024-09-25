@@ -31,7 +31,7 @@ const PizzaList = ({ addToCart }) => {
                 Precio: ${pizzaItem.price}
               </Card.Text>
               <div className="botones">
-                <Link to="./PizzaView">
+                <Link to={`/pizza/${pizzaItem.id}`}>
                   <Button className="btn-card" aria-label="ojos">Ver más 👀</Button>
                 </Link>
                 <Button className="btn-card" aria-label="carrito" onClick={() => addToCart(pizzaItem)}>
@@ -51,3 +51,4 @@ PizzaList.propTypes = {
 };
 
 export default PizzaList;
+
