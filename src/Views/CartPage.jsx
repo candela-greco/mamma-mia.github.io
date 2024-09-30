@@ -2,13 +2,26 @@ import { useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import { ApiContext } from '../Context/ApiContext';
+import { useNavigate } from 'react-router-dom';
 
 const CartPage = () => {
-  const { cart, moreQuantity, lessQuantity, deleteItem, total } = useContext(ApiContext);
+  const { cart, moreQuantity, lessQuantity, deleteItem, total, checkout, clearCart } = useContext(ApiContext);
+  const navigate = useNavigate();
 
   const formatTotal = (amount) => {
     return (amount || 0).toLocaleString();
   };
+
+  const handleCheckout = async () => {
+    try{
+      const result = await checkout ();
+      clearCart();
+      alert(`Compra realizada exitosamente. Detalle: ${JSON.stringify(result)}`);
+      navigate("/");
+    } catch  (error) {
+      alert ("Hubo un problema al realizar la compra. Por favor, vuelva a intentarlo");
+    }
+  }
 
   return (
     <div className="paginaCarrito">
@@ -40,7 +53,7 @@ const CartPage = () => {
       </ul>
       <div>
       🛒 Total: ${formatTotal(total)}
-      <Button className="botonPago">Pagar</Button>
+      <Button className="botonPago" onClick={handleCheckout}>Pagar</Button>
       </div>
     </div>
   );

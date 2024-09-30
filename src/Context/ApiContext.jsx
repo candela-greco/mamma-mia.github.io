@@ -67,8 +67,36 @@ export const ApiProvider = ({ children }) => {
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  const checkout = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/checkouts", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(cart),
+      });
+
+      if (!response.ok) {
+        throw new Error ("Error en la transacción.");
+      }
+
+      const data = await response.json();
+      console.log("Checkout exitoso:", data);
+      return data;
+    } catch (error) {
+      console.error ("Error al realizar el checkout:", error);
+    }
+  }
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
   return (
-    <ApiContext.Provider value={{ pizzas, cart, addToCart, updateQuantity, moreQuantity, lessQuantity, deleteItem, total }}>
+    <ApiContext.Provider value={{ pizzas, cart, addToCart, updateQuantity, moreQuantity, lessQuantity, deleteItem, total, checkout, clearCart }}>
       {children}
     </ApiContext.Provider>
   );

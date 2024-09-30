@@ -4,57 +4,40 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
-import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../Context/UserContext';
+import { useNavigate } from 'react-router-dom';
+
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState({ email: false, password: false, terms: false });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-
   const { login } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const validarDatos = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newError = { email: false, password: false, terms: false };
 
-    if (email === "") {
-      newError.email = true;
-    }
-    if (password === "" || password.length < 6) {
-      newError.password = true;
-    }
     if (!termsAccepted) {
-      newError.terms = true;
-    }
-    if (newError.email || newError.password || newError.terms) {
-      setError(newError);
+      alert("Debes aceptar los términos y condiciones.");
       return;
     }
 
-    login();
-
-    setError({ email: false, password: false, confirmPassword: false, terms: false });
-    setPassword('');
-    setEmail('');
-    setTermsAccepted(false);
-    setShowAlert(true);
-
-    navigate("/profile");
+    const result = await login(email, password);
+    if (result.success) {
+      setShowAlert(true);
+      navigate("/profile");
+    } else {
+      alert(result.error);
+    }
   };
 
   return (
     <div className="fondo-contenedor">
       <div className="contenedor-form">
-        <Form noValidate onSubmit={validarDatos}>
+        <Form noValidate onSubmit={handleSubmit}>
           <h1>Login</h1>
-
-          {error.email && <p className="text-danger">Por favor, ingrese un email válido.</p>}
-          {error.password && <p className="text-danger">La contraseña debe tener al menos 6 caracteres.</p>}
-          {error.terms && <p className="text-danger">Debe aceptar los términos y condiciones.</p>}
 
           {showAlert && <Alert variant="success" onClose={() => setShowAlert(false)} dismissible>
             Autenticación correcta.
@@ -68,7 +51,6 @@ function Login() {
                 placeholder="Email"
                 required
                 value={email}
-                isInvalid={error.email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Group>
@@ -81,7 +63,6 @@ function Login() {
                 placeholder="Contraseña"
                 required
                 value={password}
-                isInvalid={error.password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
@@ -93,13 +74,12 @@ function Login() {
               type="checkbox"
               label="Aceptar términos y condiciones"
               checked={termsAccepted}
-              isInvalid={error.terms}
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />
           </Form.Group>
 
           <Button className="autenticacion" type="submit">
-            Enviar
+            Iniciar sesión
           </Button>
         </Form>
       </div>
@@ -108,4 +88,5 @@ function Login() {
 }
 
 export default Login;
+
 

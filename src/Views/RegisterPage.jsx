@@ -1,56 +1,45 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
+import { UserContext } from '../Context/UserContext';
+import { useNavigate } from 'react-router-dom';
+
 
 function Formulario() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState({ email: false, password: false, confirmPassword: false, terms: false });
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const { register } = useContext(UserContext);
+  const navigate = useNavigate();
+  
 
-  const validarDatos = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newError = { email: false, password: false, confirmPassword: false, terms: false };
 
-    if (email === "") {
-      newError.email = true;
-    }
-    if (password === "" || password.length < 6) {
-      newError.password = true;
-    }
-    if (password !== confirmPassword) {
-      newError.confirmPassword = true;
-    }
     if (!termsAccepted) {
-      newError.terms = true;
-    }
-    if (newError.email || newError.password || newError.confirmPassword || newError.terms) {
-      setError(newError);
+      alert("Debes aceptar los términos y condiciones.");
       return;
     }
-    setError({ email: false, password: false, confirmPassword: false, terms: false });
-    setPassword('');
-    setConfirmPassword('');
-    setEmail('');
-    setTermsAccepted(false);
-    setShowAlert(true);
+
+    const result = await register(email, password, confirmPassword);
+    if (result.success) {
+      setShowAlert(true);
+      navigate("/profile");
+    } else {
+      alert(result.error);
+    }
   };
 
   return (
     <div className="fondo-contenedor">
       <div className="contenedor-form">
-        <Form noValidate onSubmit={validarDatos}>
+        <Form noValidate onSubmit={handleSubmit}>
           <h1>Registro</h1>
-
-          {error.email && <p className="text-danger">Por favor, ingrese un email válido.</p>}
-          {error.password && <p className="text-danger">La contraseña debe tener al menos 6 caracteres.</p>}
-          {error.confirmPassword && <p className="text-danger">Las contraseñas no coinciden.</p>}
-          {error.terms && <p className="text-danger">Debe aceptar los términos y condiciones.</p>}
 
           {showAlert && <Alert variant="success" onClose={() => setShowAlert(false)} dismissible>
             Datos enviados correctamente.
@@ -64,7 +53,7 @@ function Formulario() {
                 placeholder="Email"
                 required
                 value={email}
-                isInvalid={error.email}
+                isInvalid={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </Form.Group>
@@ -78,7 +67,7 @@ function Formulario() {
                 placeholder="Contraseña"
                 required
                 value={password}
-                isInvalid={error.password}
+                isInvalid={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
@@ -90,7 +79,7 @@ function Formulario() {
                 placeholder="Confirmar contraseña"
                 required
                 value={confirmPassword}
-                isInvalid={error.confirmPassword}
+                isInvalid={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
               <Form.Text id="passwordHelpBlock" muted>
@@ -105,12 +94,12 @@ function Formulario() {
               type="checkbox"
               label="Aceptar términos y condiciones"
               checked={termsAccepted}
-              isInvalid={error.terms}
+              isInvalid={termsAccepted}
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />
           </Form.Group>
 
-          <Button className="autenticacion" type="submit">Enviar</Button>
+          <Button className="autenticacion" type="submit">Registrarse</Button>
         </Form>
       </div>
     </div>
